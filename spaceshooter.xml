@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+
+<!-- Config decription -->
+<!-- <repository> - The tag stores all the information about the repository that will be cloning by the script -->
+<!-- <repository_name> - The name of the repository -->
+<!-- <username> - The name of the user who has the project -->
+<!-- <branch> - The branch with which you want to clone a project -->
+<!-- <cloning_directory> - Directory where the project will be downloaded -->
+<!-- <cloning_directory> - Directory where the project will be saved -->
+<!-- <state> - A system attribute that tells the system: -->
+<!-- 	0 - The repository is not used at all -->
+<!-- 	1 - The repository is cloned -->
+<!-- 	2 - The repository is archived -->
+<!-- 	3 - The repository is downloaded to the cloud -->
+<!-- WARNING!!! While the value in the tag is not 0, the script will not take any action with the repository -->
+
+<data>
+    <repository>
+		<repository_name>Space-Shooter</repository_name>
+        <username>pinchukovartur</username>
+		<branch>master</branch>
+		<cloud_directory>F:\</cloud_directory>
+		<cloning_directory>G:\</cloning_directory>
+    </repository>
+
+</data>
