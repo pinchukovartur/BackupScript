@@ -1,0 +1,1 @@
+python BackupSystem.py config.xml
