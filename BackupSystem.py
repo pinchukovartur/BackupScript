@@ -1,8 +1,15 @@
 # coding: utf8
 # @author Pinchukov Artur
 # The script downloads projects from the githab, archives them and sends them to the cloud
-import subprocess, os, zipfile, datetime, shutil, argparse, sys, time, stat
+import argparse
+import datetime
+import os
+import stat
+import subprocess
+import sys
+import time
 import xml.etree.ElementTree as ET
+import zipfile
 
 
 # Main brain script
@@ -12,7 +19,7 @@ def main():
         # checks the presence of the specified path
         print('checks folder')
         while True:
-            if os.path.exists(set_repository['cloning_directory']):
+            if os.path.exists(set_repository['cloning_directory']) and os.path.exists(set_repository['cloud_directory']):
                 print("successful check")
                 print("check list pid")
                 if check_list_pids(set_repository['repository_name'], set_repository['username'],
@@ -40,7 +47,7 @@ def main():
                     print("successful archived")
 
                     print("delete time folder")
-                    delete_folder(set_repository['cloning_directory'] + set_repository['repository_name'])
+                    delete_folder(set_repository['cloning_directory'] + "//" + set_repository['repository_name'])
                     print("successful deleted")
                     print(os.getpid())
 
@@ -52,6 +59,9 @@ def main():
                 else:
                     print("The process already in use")
                     time.sleep(10)
+            else:
+                print("Folder not exist")
+                break
 
 
 # The method archives the specified folder
@@ -191,9 +201,9 @@ def check_max_size_and_max_number(path):
 
     if max_files_size != 0 and max_file_number != 0:
         # check max files number
-        print(_get_number_file_in_direct(path))
-        print(max_file_number)
-        if _get_number_file_in_direct(path) > max_file_number:
+        print(_get_size_file_in_direct(path))
+        print(int(max_files_size) * 1024 * 1024)
+        if _get_number_file_in_direct(path) >= max_file_number:
             print("File need delete (max_file_number > files in directory)")
             # delete last file
             _delete_file_with_last_time(path)
@@ -243,15 +253,19 @@ def _delete_file_with_last_time(path):
     backup_files = filter(lambda x: x.endswith('.backup.zip'), files)
 
     # check file time
-    file_time = 99999999999999
+    file_time = 999**999
     file_name = ''
     for file in backup_files:
         # get the oldest file
-        if os.path.getctime(path + file) < file_time:
-            file_time = os.path.getctime(path + file)
+        if os.path.getctime(path + "\\" + file) < file_time:
+            file_time = os.path.getctime(path + "\\" + file)
             file_name = file
     # delete last file
-    os.remove(path + file_name)
+    os.remove(path + "\\" + file_name)
+
+
+
+
 
 
 #_get_number_file_in_direct("F:\\")

@@ -15,12 +15,15 @@
 <!-- WARNING!!! While the value in the tag is not 0, the script will not take any action with the repository -->
 
 <data>
+	<max_file_number>5</max_file_number>
+	<max_files_size>25</max_files_size>
+
     <repository>
 		<repository_name>OnlineShopBuildingMaterials</repository_name>
         <username>pinchukovartur</username>
 		<branch>master</branch>
-		<cloud_directory>F:\</cloud_directory>
-		<cloning_directory>G:\</cloning_directory>
+		<cloud_directory>E:\Projects\Python\backupsystem\_test_cloud</cloud_directory>
+		<cloning_directory>E:\Projects\Python\backupsystem\_test_temporary_folder</cloning_directory>
     </repository>
 
 </data>
