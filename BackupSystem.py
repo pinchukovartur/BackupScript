@@ -30,11 +30,14 @@ def main():
                     download_repository(repository_url, set_repository['cloning_directory'])
                     print("successful download")
 
-                    if check_max_size_and_max_number(set_repository['cloud_directory']):
-                        print("archived project")
-                        archiving_folder(set_repository['cloning_directory'], set_repository['repository_name'],
-                                         set_repository['cloud_directory'])
-                        print("successful archived")
+                    print("check max size files and number")
+                    check_max_size_and_max_number(set_repository['cloud_directory'])
+                    print("successful check")
+
+                    print("archived project")
+                    archiving_folder(set_repository['cloning_directory'], set_repository['repository_name'],
+                                        set_repository['cloud_directory'])
+                    print("successful archived")
 
                     print("delete time folder")
                     delete_folder(set_repository['cloning_directory'] + set_repository['repository_name'])
@@ -57,7 +60,7 @@ def main():
 # path_made_archive - the path where the archive will be saved
 def archiving_folder(path_folder, archive_name, path_made_archive):
     full_archive_name = path_made_archive + '/' + archive_name + datetime.datetime.now().strftime(
-        " %d %m %Y %H %M") + '.backup.zip'
+        " %d %m %Y %H %M %S") + '.backup.zip'
     # create zip file in directory
     arch = zipfile.ZipFile(full_archive_name, 'w', zipfile.ZIP_DEFLATED)
     # add file in zip file
@@ -168,25 +171,51 @@ def create_pid_file(repository_name, username, branch):
     f.close
 
 
+# The method checks if there is space in the folder and max size all files
+# path - path to the folder you want to check
 def check_max_size_and_max_number(path):
+
+    # parsing config file
     tree = ET.parse(get_console_param())
     root = tree.getroot()
-    max_file_number = ''
-    max_files_size = ''
+
+    max_file_number = 0
+    max_files_size = 0
+
+    # set param value of config file
     for param in root:
         if param.tag == 'max_file_number':
-            max_file_number = param.text
+            max_file_number = int(param.text)
         elif param.tag == 'max_files_size':
-            max_files_size = param.text
-    if max_files_size != '' and max_file_number != '':
-        if int(get_size_file_in_direct(path)) >= int(max_files_size) * 1024 * 1024:  # byte in megabyte
-            print("Need delete file")
-            return False
+            max_files_size = int(param.text)
+
+    if max_files_size != 0 and max_file_number != 0:
+        # check max files number
+        print(_get_number_file_in_direct(path))
+        print(max_file_number)
+        if _get_number_file_in_direct(path) > max_file_number:
+            print("File need delete (max_file_number > files in directory)")
+            # delete last file
+            _delete_file_with_last_time(path)
+            # recursively check again the maximum size and number of files
+            check_max_size_and_max_number(path)
         else:
-            return True
+            # check max files size
+            if int(_get_size_file_in_direct(path)) >= int(max_files_size) * 1024 * 1024:  # byte in megabyte
+                print("File need delete (max_file_number > files in directory)")
+                # delete last file
+                _delete_file_with_last_time(path)
+                # recursively check again the maximum size and number of files
+                check_max_size_and_max_number(path)
+            else:
+                return True
+    else:
+        print("Check config file")
 
 
-def get_size_file_in_direct(path):
+# The method return file size in directory with .backup.zip expansion
+# path - directory with files
+def _get_size_file_in_direct(path):
     files_in_direct = os.listdir(path)
     backup_files = filter(lambda x: x.endswith('.backup.zip'), files_in_direct)
     size = 0
@@ -196,20 +225,34 @@ def get_size_file_in_direct(path):
     return size
 
 
-def get_number_file_in_direct(path):
-    files_in_direct = os.listdir(path)
-    size = 0
-    for file in files_in_direct:
-        if os.path.isfile(path + file):
-            size += os.path.getsize(path + file)
-    return size
+# The method return number of file in directory with .backup.zip expansion
+# - path where files are counter
+def _get_number_file_in_direct(path):
+    # get file with .backup.zip expansion
+    files = os.listdir(path)
+    backup_files = list(filter(lambda x: x.endswith('.backup.zip'), files))
+    return len(backup_files)
 
 
-def get_last_time(path):
-    print(os.path.getctime(path))
+# delete the last file with .backup.zip expansion in directory
+# path - directory wherein delete file
+def _delete_file_with_last_time(path):
 
-# check_max_size_and_max_number("D:\\")
-# main()
-get_last_time("F:\BackupSystem 20 07 2017 19 42.backup.zip")
-get_last_time("F:\BackupSystem 20 07 2017 19 41.backup.zip")
-get_last_time("F:\BackupSystem 20 07 2017 19 40.backup.zip")
+    # get file with .backup.zip expansion
+    files = os.listdir(path)
+    backup_files = filter(lambda x: x.endswith('.backup.zip'), files)
+
+    # check file time
+    file_time = 99999999999999
+    file_name = ''
+    for file in backup_files:
+        # get the oldest file
+        if os.path.getctime(path + file) < file_time:
+            file_time = os.path.getctime(path + file)
+            file_name = file
+    # delete last file
+    os.remove(path + file_name)
+
+
+#_get_number_file_in_direct("F:\\")
+main()
