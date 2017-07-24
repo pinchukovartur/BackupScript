@@ -18,7 +18,7 @@
 		<repository_name>BackupSystem</repository_name>
         <username>pinchukovartur</username>
 		<branch>master</branch>
-		<cloud_directory>E:\Projects\Python\backupsystem\_test_cloud</cloud_directory>
-		<cloning_directory>E:\Projects\Python\backupsystem\_test_temporary_folder</cloning_directory>
+		<cloud_directory>D:\</cloud_directory>
+		<cloning_directory>G:\</cloning_directory>
     </repository>
 </data>
