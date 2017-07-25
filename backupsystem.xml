@@ -9,16 +9,19 @@
 <!-- <cloud_directory> - Directory where the project will be saved -->
 <!-- <max_file_number> - Maximum number of files in the directory -->
 <!-- <max_files_size> - The maximum size of all files in the directory -->
+<!-- <url> - The address in the network where the repository is located 
+							(example: username:password@github.com/username/repository.git )-->
+<!-- <password> - Password from the repository -->
 
 <data>
-	<max_file_number>5</max_file_number>
+	<max_file_number>25</max_file_number>
 	<max_files_size>25</max_files_size>
+	<max_files_size_expansion>3</max_files_size_expansion>
 
     <repository>
 		<repository_name>BackupSystem</repository_name>
-        <username>pinchukovartur</username>
-		<branch>master</branch>
-		<cloud_directory>D:\</cloud_directory>
-		<cloning_directory>G:\</cloning_directory>
+		<url>https://github.com/pinchukovartur/BackupSystem</url>
+		<cloud_directory>test_cloud\</cloud_directory>
+		<cloning_directory>test_cloned_directory\</cloning_directory>
     </repository>
 </data>

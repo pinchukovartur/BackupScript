@@ -9,16 +9,20 @@
 <!-- <cloud_directory> - Directory where the project will be saved -->
 <!-- <max_file_number> - Maximum number of files in the directory -->
 <!-- <max_files_size> - The maximum size of all files in the directory -->
+<!-- <url> - The address in the network where the repository is located 
+							(example: username:password@github.com/username/repository.git )-->
+<!-- <password> - Password from the repository -->
 
 <data>
-	<max_file_number>5</max_file_number>
-	<max_files_size>25</max_files_size>
+	<max_file_number>25</max_file_number>
+	<max_files_size>20000</max_files_size>
 
     <repository>
-		<repository_name>BackupSystem</repository_name>
-        <username>pinchukovartur</username>
-		<branch>master</branch>
-		<cloud_directory>E:\Projects\Python\backupsystem\_test_cloud</cloud_directory>
-		<cloning_directory>E:\Projects\Python\backupsystem\_test_temporary_folder</cloning_directory>
+		<repository_name>Treasures</repository_name>
+		<url>http://backupbot:12345678@192.168.0.106:8080/scm/git/Treasures</url>
+		<cloud_directory>test_cloud\</cloud_directory>
+		<cloning_directory>test_cloned_directory\</cloning_directory>
     </repository>
+
+
 </data>

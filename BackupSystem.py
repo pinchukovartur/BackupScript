@@ -10,69 +10,59 @@ import sys
 import time
 import xml.etree.ElementTree as ET
 import zipfile
-#from slackclient import SlackClient
 import slack
 import slack.chat
 
 
-
 # Main brain script
 def main():
+    # token slack messenger
+    slack_token = 'xoxp-217741648471-216642605474-216942255284-7451978887994997a961e865b0067552'
+    # get list repository of config file
     list_repositories = get_all_repository()
+    # work with all repository
     for set_repository in list_repositories:
-        # checks the presence of the specified path
-        print('checks folder')
-        while True:
-            if os.path.exists(set_repository['cloning_directory']) and os.path.exists(
-                    set_repository['cloud_directory']):
-                print("successful check")
-                print("check list pid")
-                if check_list_pids(set_repository['repository_name'], set_repository['username'],
-                                   set_repository['branch']):
-                    print("successful check")
-                    try:
-                        print("create pid file")
-                        create_pid_file(set_repository['repository_name'], set_repository['username'],
-                                    set_repository['branch'])
-                        print("successful create")
-                        print("download repository")
+        # check spelling repo data of config file
+        check_config_file(set_repository)
 
-                        repository_url = 'https://github.com/' + set_repository['username'] + '/' \
-                                     + set_repository['repository_name'] + '.git -b ' + set_repository['branch']
+        repository_name = set_repository["repository_name"]
+        url = set_repository['url']
+        cloud_directory = set_repository['cloud_directory']
+        cloning_directory = set_repository['cloning_directory']
 
-                        download_repository(repository_url, set_repository['cloning_directory'])
-                        print("successful download")
+        add_info_in_log("CHECK list pid\n")
+        if check_list_pids(url):
+            try:
+                add_info_in_log("CREATE pid file\n")
+                create_pid_file(url)
 
-                        print("check max size files and number")
-                        check_max_size_and_max_number(set_repository['cloud_directory'])
-                        print("successful check")
+                add_info_in_log("DOWNLOAD repository\n")
 
-                        print("archived project")
-                        archiving_folder(set_repository['cloning_directory'] + "\\" + set_repository['repository_name'],
-                                     set_repository['cloud_directory'])
-                        print("successful archived")
+                file_name = "\\" + repository_name + "-" + str(os.getpid())
+                download_repository(url, cloning_directory + file_name)
 
-                        print("delete time folder")
-                        delete_folder(set_repository['cloning_directory'] + "//" + set_repository['repository_name'])
-                        print("successful deleted")
-                        print(os.getpid())
-                    except Exception as e:
-                        print(e)
-                    finally:
-                        print("delete lock file")
-                        os.remove(str(os.getpid()) + ".lock")
-                        print("successful deleted")
-                        print("sleep 10 sec")
+                add_info_in_log("CHECK max size files and number\n")
+                check_max_size_and_max_number(cloud_directory)
 
-                    send_message_in_slack(set_repository['repository_name'] + "has be cloned", "#general", "Backup "
-                                                                                                           "System")
-                    time.sleep(10)
-                else:
-                    print("The process already in use")
-                    time.sleep(10)
-            else:
-                print("Folder not exist")
-                break
+                add_info_in_log("ARCHIVED project\n")
+                archiving_folder(cloning_directory, cloud_directory + repository_name)
+
+                add_info_in_log("DELETE time folder\n")
+                delete_folder(cloning_directory + file_name)
+
+                add_info_in_log("DELETE lock file\n")
+                os.remove(str(os.getpid()) + ".lock")
+            except Exception as e:
+                add_info_in_log(str(e))
+            finally:
+                add_info_in_log("SEND message\n")
+                send_message_in_slack(url + " has be cloned", "#general", "BackupSystem", slack_token)
+
+                add_info_in_log("SLEEP 10 sec\n")
+                time.sleep(10)
+        else:
+            add_info_in_log("The process already in use")
+            time.sleep(10)
 
 
 # The method archives the specified folder
@@ -87,7 +77,6 @@ def archiving_folder(path_folder, path_made_archive):
     for root, dirs, files in os.walk(path_folder):
         for tarfile in files:
             if tarfile != '':
-                print(tarfile)
                 arch.write(root + '\\' + tarfile)
     arch.close()
 
@@ -95,38 +84,41 @@ def archiving_folder(path_folder, path_made_archive):
 # The method that downloads projects with github
 # repository_url - network address of the repository
 # file_path - the path where the project will be cloned
-def download_repository(repository_url, file_path):
-    # checks the presence of the specified path
-    if os.path.exists(file_path):
-        try:
-            # arguments passed to run function
-            comand = "cd /D  \"" + file_path + "\" && git clone " + repository_url
-            # run process cloning repository
-            subprocess.run(comand, shell=True, check=True)
-        except subprocess.CalledProcessError as e:
-            print(e)
+def download_repository(url, file_path):
+    # create new process
+    p = subprocess.run("git clone " + url + " " + file_path, shell=True,
+                       stdout=subprocess.PIPE)
+    # exit if process error
+    if p.returncode != 0:
+        add_info_in_log("ERROR!! download load repository err - " + str(p.returncode))
+        sys.exit(p.returncode)
     else:
-        print('The directory does not exist')
+        add_info_in_log("good download repository - " + str(p.returncode))
 
 
 # The method get all repository information of config.xml
 def get_all_repository():
     repository_list = list()
-    tree = ET.parse(get_console_param())
-    root = tree.getroot()
-    print("reed config file")
-    for repository in root:
-        if repository.tag == "repository":
-            repository_dict = dict()
-            for attribute in repository:
-                repository_dict[attribute.tag] = attribute.text
-            repository_list.append(repository_dict)
-    return repository_list
+    try:
+        # pars file config
+        tree = ET.parse(get_console_param())
+        root = tree.getroot()
+        # get repository param
+        for repository in root:
+            if repository.tag == "repository":
+                repository_dict = dict()
+                for attribute in repository:
+                    repository_dict[attribute.tag] = attribute.text
+                repository_list.append(repository_dict)
+        return repository_list
+    except ET.ParseError as e:
+        add_info_in_log("ERROR!!! " + str(e) + "\n check config file")
+        sys.exit(1)
 
 
 # The method return console parameter(config name)
 def get_console_param():
-    print("get config file")
+    # read console parameter
     parser = argparse.ArgumentParser()
     parser.add_argument('name', nargs='?', default='config.xml')
     namespace = parser.parse_args(sys.argv[1:])
@@ -136,29 +128,36 @@ def get_console_param():
 # Add info in log file
 # inform - information to be saved
 def add_info_in_log(inform):
-    f = open("log.txt", 'a')
+    f = open("log_" + str(os.getpid()) + ".txt", 'a')
     f.write(inform + '\n')
-    f.close
+    f.close()
 
 
-# Delete folder
+# Delete folder in path
 # pth - path to folder
 def delete_folder(pth):
+    # find folder in path
     for root, dirs, files in os.walk(pth, topdown=False):
         for name in files:
+            # create full name file
             filename = os.path.join(root, name)
             os.chmod(filename, stat.S_IWUSR)
+            # and remove him
             os.remove(filename)
         for name in dirs:
             os.rmdir(os.path.join(root, name))
+    # and remove empty folder
     os.rmdir(pth)
 
 
 # The method return information about PID all scripts
 def _get_list_pids():
     list_pids = list()
+    # get all files, where is project
     files = os.listdir('.')
+    # sort there files
     pid_files = filter(lambda x: x.endswith('.lock'), files)
+    # and get full data in them
     for file_name in pid_files:
         tree = ET.parse(file_name)
         root = tree.getroot()
@@ -171,31 +170,28 @@ def _get_list_pids():
 
 
 # The method return true if process unique and false if not unique
-# repository_name - check this repository in pid files
-# username - check this username in pid files
-# branch - check this branch in pid files
-def check_list_pids(repository_name, username, branch):
+# url - address repository
+def check_list_pids(url):
     list_pids = _get_list_pids()
     if len(list_pids) == 0:
         return True
+
     for pid in list_pids:
-        if pid['repository_name'] != repository_name or pid['username'] != username or pid['branch'] != branch:
+        if pid['url'] != url:
             return True
         else:
             return False
 
 
 # The method create file with pid info
-# repository_name - save this repository info in pid files
-# username - save this username info in pid files
-# branch - save this branch info in pid files
-def create_pid_file(repository_name, username, branch):
-    f = open(str(os.getpid()) + ".lock", 'w')
-    text = '<?xml version="1.0"?>\n<data>\n<process>\n<repository_name>' + repository_name + \
-           '</repository_name>\n<username>' + username + '</username>\n<branch>' + branch + \
-           '</branch>\n</process>\n</data>'
-    f.write(text)
-    f.close
+# url - repository address
+def create_pid_file(url):
+    if url is not None:
+        f = open(str(os.getpid()) + ".lock", 'w')
+        text = '<?xml version="1.0"?>\n<data>\n<process>\n<url>' + url + \
+               '</url>\n</process>\n</data>'
+        f.write(text)
+        f.close()
 
 
 # The method checks if there is space in the folder and max size all files
@@ -210,17 +206,14 @@ def check_max_size_and_max_number(path):
 
     # set param value of config file
     for param in root:
-        if param.tag == 'max_file_number':
+        if param.tag == 'max_file_number' and str(param.text) != "None":
             max_file_number = int(param.text)
-        elif param.tag == 'max_files_size':
+        elif param.tag == 'max_files_size' and str(param.text) != "None":
             max_files_size = int(param.text)
 
     if max_files_size != 0 and max_file_number != 0:
         # check max files number
-        print(_get_size_file_in_direct(path))
-        print(int(max_files_size) * 1024 * 1024)
         if _get_number_file_in_direct(path) >= max_file_number:
-            print("File need delete (max_file_number > files in directory)")
             # delete last file
             _delete_file_with_last_time(path)
             # recursively check again the maximum size and number of files
@@ -228,23 +221,23 @@ def check_max_size_and_max_number(path):
         else:
             # check max files size
             if int(_get_size_file_in_direct(path)) >= int(max_files_size) * 1024 * 1024:  # byte in megabyte
-                print("File need delete (max_file_number > files in directory)")
                 # delete last file
                 _delete_file_with_last_time(path)
                 # recursively check again the maximum size and number of files
                 check_max_size_and_max_number(path)
-            else:
-                return True
     else:
-        print("Check config file")
+        add_info_in_log("Warning!! check max_file_number and max_files_size attributes in config file")
 
 
 # The method return file size in directory with .backup.zip expansion
 # path - directory with files
 def _get_size_file_in_direct(path):
+    # get file in directory
     files_in_direct = os.listdir(path)
+    # sort this files
     backup_files = filter(lambda x: x.endswith('.backup.zip'), files_in_direct)
     size = 0
+    # and count their
     for file in backup_files:
         if os.path.isfile(path + file):
             size += os.path.getsize(path + file)
@@ -254,10 +247,15 @@ def _get_size_file_in_direct(path):
 # The method return number of file in directory with .backup.zip expansion
 # - path where files are counter
 def _get_number_file_in_direct(path):
-    # get file with .backup.zip expansion
-    files = os.listdir(path)
-    backup_files = list(filter(lambda x: x.endswith('.backup.zip'), files))
-    return len(backup_files)
+    # find folder in directory
+    if os.path.exists(path):
+        # get file with .backup.zip expansion
+        files = os.listdir(path)
+        backup_files = list(filter(lambda x: x.endswith('.backup.zip'), files))
+        return len(backup_files)
+    else:
+        add_info_in_log("ERROR!!! Don't find path cloud directory")
+        sys.exit(1)
 
 
 # Delete the last file with .backup.zip expansion in directory
@@ -268,7 +266,7 @@ def _delete_file_with_last_time(path):
     backup_files = filter(lambda x: x.endswith('.backup.zip'), files)
 
     # check file time
-    file_time = 99 ** 99  # ГОВНА КОД ///////////////////////////////////////////////////////////////////////////////////////////////////
+    file_time = sys.maxsize
     file_name = ''
     for file in backup_files:
         # get the oldest file
@@ -283,13 +281,22 @@ def _delete_file_with_last_time(path):
 # message - message that is sent
 # chanel - chanel to which the message will be sent
 # username - the name of the message
-def send_message_in_slack(message, chanel, username):
-    slack.api_token = 'xoxp-217741648471-216642605474-216713481444-5d766c5d73469c073366b979ee4e37d5'
+def send_message_in_slack(message, chanel, username, slack_token):
+    slack.api_token = slack_token
     slack.chat.post_message(chanel, message, username=username)
 
 
+# The method check spelling config file
+# set_repository - dict with info about repository
+def check_config_file(set_repository):
+    for keys_repo_set in set_repository.keys():
+        if str(set_repository.get(keys_repo_set)) == "None":
+            add_info_in_log("ERROR!!! " + keys_repo_set + " can't be NULL")
+            sys.exit(1)
+        if "url" != keys_repo_set and "cloud_directory" != keys_repo_set and "cloning_directory" != keys_repo_set \
+                and "repository_name" != keys_repo_set:
+            add_info_in_log("ERROR!!! " + str(keys_repo_set) + " check spelling")
+            sys.exit(1)
+
 
 main()
-# download_repository("https://github.com/pinchukovartur/BackupSystem", "F:\\")
-#archiving_folder("D:\\", "test_arch", "G:\\")
-#send_message_in_slack("hello bot", "#general", "Backup bot")
