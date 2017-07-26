@@ -17,7 +17,7 @@ import slack.chat
 # Main brain script
 def main():
     # token slack messenger
-    slack_token = 'xoxp-217741648471-216642605474-216942255284-7451978887994997a961e865b0067552'
+    slack_token = 'xoxp-217741648471-216642605474-218678197590-5d0bb18202b703d2ac8e93d43ff4907b'
     # get list repository of config file
     list_repositories = get_all_repository()
     # work with all repository
@@ -25,43 +25,43 @@ def main():
         # check spelling repo data of config file
         check_config_file(set_repository)
 
-        repository_name = set_repository["repository_name"]
+        repository_name = set_repository["config_name"]
         url = set_repository['url']
         cloud_directory = set_repository['cloud_directory']
         cloning_directory = set_repository['cloning_directory']
 
-        add_info_in_log("CHECK list pid\n")
+        print("CHECK list pid\n")
         if check_list_pids(url):
             try:
-                add_info_in_log("CREATE pid file\n")
+                print("CREATE pid file\n")
                 create_pid_file(url)
 
-                add_info_in_log("DOWNLOAD repository\n")
+                print("DOWNLOAD repository\n")
 
                 file_name = "\\" + repository_name + "-" + str(os.getpid())
                 download_repository(url, cloning_directory + file_name)
 
-                add_info_in_log("CHECK max size files and number\n")
+                print("CHECK max size files and number\n")
                 check_max_size_and_max_number(cloud_directory)
 
-                add_info_in_log("ARCHIVED project\n")
-                archiving_folder(cloning_directory, cloud_directory + repository_name)
+                print("ARCHIVED project\n")
+                archiving_folder(cloning_directory + file_name, cloud_directory + repository_name)
 
-                add_info_in_log("DELETE time folder\n")
+                print("DELETE time folder\n")
                 delete_folder(cloning_directory + file_name)
 
-                add_info_in_log("DELETE lock file\n")
+                print("DELETE lock file\n")
                 os.remove(str(os.getpid()) + ".lock")
             except Exception as e:
-                add_info_in_log(str(e))
+                print(str(e))
             finally:
-                add_info_in_log("SEND message\n")
-                send_message_in_slack(url + " has be cloned", "#general", "BackupSystem", slack_token)
+                print("SEND message\n")
+                send_message_in_slack(url + " has be cloned", "#general", "backup bot", slack_token)
 
-                add_info_in_log("SLEEP 10 sec\n")
+                print("SLEEP 10 sec\n")
                 time.sleep(10)
         else:
-            add_info_in_log("The process already in use")
+            print("The process already in use")
             time.sleep(10)
 
 
@@ -72,6 +72,9 @@ def archiving_folder(path_folder, path_made_archive):
     full_archive_name = path_made_archive + datetime.datetime.now().strftime(
         " %d %m %Y %H %M %S") + '.backup.zip'
     # create zip file in directory
+    print(full_archive_name)
+    print(path_folder)
+    print(path_made_archive)
     arch = zipfile.ZipFile(full_archive_name, 'w', zipfile.ZIP_DEFLATED)
     # add file in zip file
     for root, dirs, files in os.walk(path_folder):
@@ -86,14 +89,17 @@ def archiving_folder(path_folder, path_made_archive):
 # file_path - the path where the project will be cloned
 def download_repository(url, file_path):
     # create new process
-    p = subprocess.run("git clone " + url + " " + file_path, shell=True,
+    p = subprocess.Popen("git clone " + url + " " + file_path, shell=True,
                        stdout=subprocess.PIPE)
+    for line in iter(p.stdout.readline, b''):
+        print (line)
+    p.communicate()
     # exit if process error
     if p.returncode != 0:
-        add_info_in_log("ERROR!! download load repository err - " + str(p.returncode))
+        print("ERROR!! download load repository, № err - " + str(p.returncode))
         sys.exit(p.returncode)
     else:
-        add_info_in_log("good download repository - " + str(p.returncode))
+        print("good download repository - " + str(p.returncode))
 
 
 # The method get all repository information of config.xml
@@ -112,7 +118,7 @@ def get_all_repository():
                 repository_list.append(repository_dict)
         return repository_list
     except ET.ParseError as e:
-        add_info_in_log("ERROR!!! " + str(e) + "\n check config file")
+        print("ERROR!!! " + str(e) + "\n check config file")
         sys.exit(1)
 
 
@@ -203,6 +209,7 @@ def check_max_size_and_max_number(path):
 
     max_file_number = 0
     max_files_size = 0
+    size_expansion = 0
 
     # set param value of config file
     for param in root:
@@ -210,8 +217,10 @@ def check_max_size_and_max_number(path):
             max_file_number = int(param.text)
         elif param.tag == 'max_files_size' and str(param.text) != "None":
             max_files_size = int(param.text)
+        elif param.tag == 'size_expansion' and str(param.text) != "None":
+            size_expansion = int(param.text)
 
-    if max_files_size != 0 and max_file_number != 0:
+    if max_files_size != 0 and max_file_number != 0 and 4 > size_expansion != 0:
         # check max files number
         if _get_number_file_in_direct(path) >= max_file_number:
             # delete last file
@@ -220,13 +229,13 @@ def check_max_size_and_max_number(path):
             check_max_size_and_max_number(path)
         else:
             # check max files size
-            if int(_get_size_file_in_direct(path)) >= int(max_files_size) * 1024 * 1024:  # byte in megabyte
+            if int(_get_size_file_in_direct(path)) >= int(max_files_size) * (1024**(size_expansion+1)):
                 # delete last file
                 _delete_file_with_last_time(path)
                 # recursively check again the maximum size and number of files
                 check_max_size_and_max_number(path)
     else:
-        add_info_in_log("Warning!! check max_file_number and max_files_size attributes in config file")
+        print("Warning!! check max_file_number and max_files_size attributes in config file")
 
 
 # The method return file size in directory with .backup.zip expansion
@@ -254,7 +263,7 @@ def _get_number_file_in_direct(path):
         backup_files = list(filter(lambda x: x.endswith('.backup.zip'), files))
         return len(backup_files)
     else:
-        add_info_in_log("ERROR!!! Don't find path cloud directory")
+        print("ERROR!!! Don't find path cloud directory")
         sys.exit(1)
 
 
@@ -282,8 +291,7 @@ def _delete_file_with_last_time(path):
 # chanel - chanel to which the message will be sent
 # username - the name of the message
 def send_message_in_slack(message, chanel, username, slack_token):
-    slack.api_token = slack_token
-    slack.chat.post_message(chanel, message, username=username)
+    slack.chat.post_message(chanel, message, token=slack_token, username=username, icon_emoji=':robot_face:')
 
 
 # The method check spelling config file
@@ -291,11 +299,11 @@ def send_message_in_slack(message, chanel, username, slack_token):
 def check_config_file(set_repository):
     for keys_repo_set in set_repository.keys():
         if str(set_repository.get(keys_repo_set)) == "None":
-            add_info_in_log("ERROR!!! " + keys_repo_set + " can't be NULL")
+            print("ERROR!!! " + keys_repo_set + " can't be NULL")
             sys.exit(1)
         if "url" != keys_repo_set and "cloud_directory" != keys_repo_set and "cloning_directory" != keys_repo_set \
-                and "repository_name" != keys_repo_set:
-            add_info_in_log("ERROR!!! " + str(keys_repo_set) + " check spelling")
+                and "config_name" != keys_repo_set:
+            print("ERROR!!! " + str(keys_repo_set) + " check spelling")
             sys.exit(1)
 
 
