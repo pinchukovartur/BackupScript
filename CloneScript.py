@@ -1,4 +1,3 @@
-import argparse
 import os
 import stat
 import subprocess
@@ -20,11 +19,11 @@ def download_repository(url, file_path):
 
 
 # The method get all repository information of config.xml
-def get_all_repository():
+def get_all_repository(config_file_name):
     repository_list = list()
     try:
         # pars file config
-        tree = ET.parse(get_console_param())
+        tree = ET.parse(config_file_name)
         root = tree.getroot()
         # get repository param
         for repository in root:
@@ -37,15 +36,6 @@ def get_all_repository():
     except ET.ParseError as e:
         print("ERROR!!! " + str(e) + "\n check config file")
         sys.exit(1)
-
-
-# The method return console parameter(config name)
-def get_console_param():
-    # read console parameter
-    parser = argparse.ArgumentParser()
-    parser.add_argument('name', nargs='?', default='configs/config.xml')
-    namespace = parser.parse_args(sys.argv[1:])
-    return namespace.name
 
 
 # The method check spelling config file
@@ -124,13 +114,13 @@ def delete_folder(pth):
 
 # The method checks if there is space in the folder and max size all files
 # path - path to the folder you want to check
-def check_max_size_and_max_number(path, size_project):
+def check_max_size_and_max_number(path, size_project, config_file_name):
     # parsing config file
-    tree = ET.parse(get_console_param())
+    tree = ET.parse(config_file_name)
     root = tree.getroot()
 
     max_file_number = 0
-    max_files_size = 0
+    storage_size = 0
     size_expansion = 0
 
     # set param value of config file
@@ -138,29 +128,40 @@ def check_max_size_and_max_number(path, size_project):
         if param.tag == 'max_file_number' and str(param.text) != "None":
             max_file_number = int(param.text)
         elif param.tag == 'storage_size' and str(param.text) != "None":
-            max_files_size = int(param.text)
-        elif param.tag == 'size_expansion' and str(param.text) != "None":
-            size_expansion = int(param.text)
+            storage_size = int(param.text[:-2])  # All symbols except the last two
+            size_expansion = get_max_size_expansion(param.text[-2:])  # Last two characters
 
-    if size_project > max_files_size:
+    if size_project > storage_size:
         raise NameError("ERROR!!! size project more storage size")
 
-    if max_files_size != 0 and max_file_number != 0 and 4 > size_expansion != 0:
+    if storage_size != 0 and max_file_number != 0 and 4 > size_expansion != 0:
         # check max files number
         if _get_number_file_in_direct(path) >= max_file_number:
             # delete last file
             _delete_file_with_last_time(path)
             # recursively check again the maximum size and number of files
-            check_max_size_and_max_number(path)
+            check_max_size_and_max_number(path, size_project, config_file_name)
         else:
             # check max files size
-            if int(get_size_file_in_direct(path)) >= int(max_files_size) * (1024**(size_expansion+1)):
+            if int(get_size_file_in_direct(path)) >= int(storage_size) * (1024 ** (size_expansion + 1)):
                 # delete last file
                 _delete_file_with_last_time(path)
                 # recursively check again the maximum size and number of files
-                check_max_size_and_max_number(path)
+                check_max_size_and_max_number(path, size_project, config_file_name)
     else:
         print("Warning!! check max_file_number and max_files_size attributes in config file")
+
+
+def get_max_size_expansion(key_expansion):
+    key = key_expansion.lower()
+    if key == 'mb':
+        return 1
+    elif key == 'gb':
+        return 2
+    elif key == 'tb':
+        return 3
+    else:
+        raise NameError("ERROR!!! Unknown expansion of the maximum value of the cloud directory")
 
 
 # The method return file size in directory with .backup.zip expansion

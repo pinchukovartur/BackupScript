@@ -1,3 +1,27 @@
+# pycron [![Build Status](https://travis-ci.org/kipe/pycron.svg?branch=master)](https://travis-ci.org/kipe/pycron)
+A simple script that clones, archives and sends the project to the directory, depending on the configurations specified. 
+Upon completion of the work, the script sends the report to the Slack chat.
+
+## Installation
+```
+	run install.bat file
+```
+
+## Usage
+	```
+	python RunScripts.py configs\config.xml "*/5_*_*_*_*" #Run clone project with config.xml and start every 5 minutes
+	```
+	
+## Help
+	The formats currently supported are
+	- `*/5` (for "every X" function),
+	- `4-10` (for time ranges),
+	- `6,8,23` (for a list of values),
+	- `*` (for wildcard),
+	- and of course a single number.
+	
+	
+	Config documentation
 <?xml version="1.0"?>
 
 <!-- Config decription -->
@@ -10,7 +34,6 @@
 			mb - megabyte  
 			gb - gigabyte 
 			tb - terabyte 
-	(example: max_files_size = 3 & size_expansion = 1 => 3 megabyte max size)-->
 <!-- <url> - The address in the network where the repository is located 
 							(example: username:password@github.com/username/repository.git )-->
 
@@ -19,9 +42,9 @@
 	<storage_size>25mb</storage_size>
 
     <repository>
-		<config_name>BackupSystem</config_name>
-		<url>https://github.com/pinchukovartur/BackupSystem</url>
-		<cloud_directory>test_cloud\</cloud_directory>
+		<config_name>ArchiveName</config_name>
+		<url>username:password@github.com/username/repository.git</url>
+		<cloud_directory>test_cloud_directory\</cloud_directory>
 		<cloning_directory>test_cloned_directory\</cloning_directory>
     </repository>
 </data>

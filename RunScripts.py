@@ -2,6 +2,7 @@
 from CloneScript import *
 from ArchiveScript import *
 from SlackScript import *
+import argparse
 import pycron
 
 SLACK_CHANNEL = "#general"
@@ -13,17 +14,18 @@ SLACK_GREEN = "#00FF00"
 
 # read console parameter
 parser = argparse.ArgumentParser()
-parser.add_argument('g', nargs='?', default='config.xml')
-parser.add_argument('c', nargs='?', default='*/7_*_*_*_*')
-g = parser.parse_args(sys.argv[1:])
-n = parser.parse_args(sys.argv[1:])
+parser.add_argument('g', nargs='?', default='configs/config.xml')
+parser.add_argument('c', nargs='?', default='*/32 * * * *')
+config_file = parser.parse_args(sys.argv[1:])
+cron_cmd = parser.parse_args(sys.argv[2:])
 
-print(pycron.is_now(n.c.replace("_", " ")))
-print(pycron.is_now('*/8 * * * *'))
+print(config_file.g)
+print(cron_cmd.c)
+
 while True:
-    if pycron.is_now(str(n.c).replace("_", " ")):
+    if pycron.is_now(cron_cmd.c.replace("_", " ")):
         # get list repository of config file
-        list_repositories = get_all_repository()
+        list_repositories = get_all_repository(config_file.g)
 
         # work with all repository
         for set_repository in list_repositories:
@@ -50,7 +52,7 @@ while True:
                     download_repository(url, cloning_directory + "\\" + file_name)
                     # CHECK SIZE AND NUMBER FILES
                     size_project = get_size_file_in_direct(cloning_directory + "\\" + file_name)
-                    check_max_size_and_max_number(cloning_directory, size_project)
+                    check_max_size_and_max_number(cloning_directory, size_project, config_file.g)
                 except Exception as e:
                     print(e)
                     send_message_in_slack(SLACK_CHANNEL, "ERROR!!! clone repository " + name_config,

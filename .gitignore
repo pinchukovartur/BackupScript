@@ -1,4 +1,3 @@
 .idea
-_test_cloud/*
-_test_temporary_folder/*
 *.lock
+_pycache_
