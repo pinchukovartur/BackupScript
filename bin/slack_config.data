@@ -1,0 +1,7 @@
+<data>
+    <slack>
+		<channel>#general</channel>
+		<username>Backup Bot</username>
+		<icon_name>:smile:</icon_name>
+    </slack>
+</data>
