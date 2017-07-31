@@ -1,23 +1,40 @@
-# Backup Script [![Build Status](https://travis-ci.org/kipe/pycron.svg?branch=master)](https://travis-ci.org/kipe/pycron)
-A simple script that clones, archives and sends the project to the directory, depending on the configurations specified. 
-Upon completion of the work, the script sends the report to the Slack chat.
+# Backup Script 
+A script that clones a repository from a git in a slanted folder creates a project archive and deletes the project folder, checks to see if there is enough space for the archive to move the archive to the cloud. At the end, it sends a notification to the Slask chat.
 
 ## Installation
 ```
-    install python 3.6
-	run install.bat file
+1. Install python version no less than 3.6
+2. Run install bat file to install all the necessary libraries
+3. Create a slack token to send a message http://php.net/manual/en/class.mongocollection.php
+4. Add a token to the slack_config.xml configuration
+5. Create a repository configuration.xml in the configs folder
+6. Run the script with the required parameters
 ```
 
 ## Usage
-	```
-	python run.py <config_name.xml> <cron_command>
+```
+python run.py <config_name.xml> <cron_command> <slack_config.data>
 
-	Example
-	python RunScripts.py configs\config.xml "*/5_*_*_*_*" #Run clone project with config.xml and start every 5 minutes
-	```
+Example
+python RunScripts.py config.xml "*/5 * * * *"  #Run clone project with config.xml and start every 5 minutes
+```
 
+# Features
+1. Default value:
+
+	<slack_config.data> - Without entering the configuration is slack, messages are not sent;
+	
+	<cron_command> - If you do not enter the kroon parameters, the script will run indefinitely;
+	
+	<config_name.xml> - Required parameter for input.
+	
+2. If all parameters are empty, script configurations are output.
+
+	
 # Algorithm
-	![alt text](https://pp.userapi.com/c841637/v841637180/a42a/dLeO3KRGjoc.jpg)
+
+
+![alt tag](https://pp.userapi.com/c841637/v841637180/a42a/dLeO3KRGjoc.jpg "Algorithm of the script")
 	
 ## Cron Help
     * * * * * Running command
@@ -39,19 +56,19 @@ Upon completion of the work, the script sends the report to the Slack chat.
 	
 ## Config Help
 ```
-<!-- Config decription -->
-<!-- <repository> - The tag stores all the information about the repository that will be cloning by the script -->
-<!-- <config_name> - The name of the repository -->
-<!-- <cloning_directory> - Directory where the project will be downloaded (temporarily) -->
-<!-- <cloud_directory> - Directory where the project will be saved -->
-<!-- <max_file_number> - Maximum number of files in the directory -->
-<!-- <storage_size> - The maximum size of all files in the directory
+Config decription
+<repository> - The tag stores all the information about the repository that will be cloning by the script.
+<config_name> - The name of the repository.
+<cloning_directory> - Directory where the project will be downloaded (temporarily).
+<cloud_directory> - Directory where the project will be saved.
+<max_file_number> - Maximum number of files in the directory.
+<storage_size> - The maximum size of all files in the directory:
 			mb - megabyte  
 			gb - gigabySte 
-			tb - terabyte -->
-<!-- <url> - The address in the network where the repository is located 
-							(example: username:password@github.com/username/repository.git )-->
+			tb - terabyte
+<url> - The address in the network where the repository is located (example: username:password@github.com/username/repository.git )
 ```
+
 ```
 <data>
 	<max_file_number>25</max_file_number>
