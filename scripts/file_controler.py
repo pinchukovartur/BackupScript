@@ -42,7 +42,7 @@ def delete_folder(pth):
     os.rmdir(pth)
 
 
-# The method return file size in directory with .backup.zip expansion
+# The method return file size in directory
 # path - directory with files
 def get_size_file_in_direct(path):
     size = 0
@@ -55,6 +55,9 @@ def get_size_file_in_direct(path):
 
 # The method checks if there is space in the folder and max size all files
 # path - path to the folder you want to check
+# size_project - max size project
+# storage_size - size cloud
+# max_file_number - max number file in directory
 def check_max_size_and_max_number(path, size_project, storage_size, max_file_number):
 
     print("-- size project = " + str(float(size_project) / 10 ** 6))
@@ -103,9 +106,7 @@ def __get_number_file_in_direct(path):
         backup_files = list(filter(lambda x: x.endswith('.backup.zip'), files))
         return len(backup_files)
     else:
-        print(path)
-        print("ERROR!!! Don't find path directory (__get_number_file_in_direct)")
-        sys.exit(1)
+        raise NameError("ERROR!!! Do not find path directory - check config file")
 
 
 # Delete the last file with .backup.zip expansion in directory

@@ -15,6 +15,9 @@ Upon completion of the work, the script sends the report to the Slack chat.
 	Example
 	python RunScripts.py configs\config.xml "*/5_*_*_*_*" #Run clone project with config.xml and start every 5 minutes
 	```
+
+# Algorithm
+	[![Algorithm](https://github.com/pinchukovartur/BackupSystem/blob/master/bin/BackupSystem.png)](https://pinchukovartur.github.io/.)
 	
 ## Cron Help
     * * * * * Running command
