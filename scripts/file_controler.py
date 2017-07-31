@@ -2,8 +2,10 @@ import os
 import sys
 import stat
 
+
 # checks for a folder
 def check_folder(folder_path, create_exception=False):
+    # if folder not found False or Error
     if not os.path.exists(folder_path):
         if create_exception:
             raise NameError("ERROR!! not found folder - " + folder_path)
@@ -14,6 +16,7 @@ def check_folder(folder_path, create_exception=False):
 
 # checks for a file
 def check_file(file_path, create_exception=False):
+    # if file not found False or Error
     if not os.path.isfile(file_path):
         if create_exception:
             raise NameError("ERROR!! not found file - " + file_path)
@@ -47,23 +50,28 @@ def get_size_file_in_direct(path):
         for f in filenames:
             fp = os.path.join(dirpath, f)
             size += os.path.getsize(fp)
-            print(float(size)/10**9)
     return size
 
 
 # The method checks if there is space in the folder and max size all files
 # path - path to the folder you want to check
 def check_max_size_and_max_number(path, size_project, storage_size, max_file_number):
-    print("-- size project = " + str(float(size_project)/10**6))
-    print("-- size storage = " + str(float(storage_size)/10**6))
+
+    print("-- size project = " + str(float(size_project) / 10 ** 6))
+    print("-- size storage = " + str(float(storage_size) / 10 ** 6))
+    add_info_in_log("-- size project = " + str(float(size_project) / 10 ** 6))
+    add_info_in_log("-- size project = " + str(float(size_project) / 10 ** 6))
+
     if int(size_project) > int(storage_size):
         raise NameError("ERROR!!! size project more storage size : size project -" + size_project + " size storage - " \
                         + storage_size)
     if storage_size != 0 and max_file_number != 0:
         # check max files number
         file_number = int(__get_number_file_in_direct(path))
+
         print("-- file number = " + str(file_number))
-        print(max_file_number)
+        add_info_in_log("-- file number = " + str(file_number))
+
         if int(file_number) >= int(max_file_number):
             # delete last file
             __delete_file_with_last_time(path)
@@ -72,7 +80,10 @@ def check_max_size_and_max_number(path, size_project, storage_size, max_file_num
         else:
             # check max files size
             size_file = int(get_size_file_in_direct(path))
-            print("-- file size = " + str(size_file))
+
+            print("-- file size = " + str(float(size_file) / 10 ** 6))
+            add_info_in_log("-- file size = " + str(float(size_file) / 10 ** 6))
+
             if size_file >= int(storage_size):
                 # delete last file
                 __delete_file_with_last_time(path)
@@ -114,3 +125,10 @@ def __delete_file_with_last_time(path):
             file_name = file
     # delete last file
     os.remove(path + "\\" + file_name)
+
+
+# Add info in log file
+def add_info_in_log(info):
+    f = open("log_" + str(os.getpid()) + ".txt", "a")
+    f.write(info + "\n")
+    f.close()

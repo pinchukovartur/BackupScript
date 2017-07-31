@@ -41,6 +41,7 @@ def archiving_folder(path, file_name):
 
 # check arch size
 def __check_archive(file_name):
+    # if arch file < 1 kb = error
     if int(os.path.getsize(file_name)) < 1024:
         os.remove(file_name)
         raise NameError("ERROR!!! archive size less  1kb\n Check config file: clone and cloud directory")

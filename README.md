@@ -4,15 +4,28 @@ Upon completion of the work, the script sends the report to the Slack chat.
 
 ## Installation
 ```
+    install python 3.6
 	run install.bat file
 ```
 
 ## Usage
 	```
+	python run.py <config_name.xml> <cron_command>
+
+	Example
 	python RunScripts.py configs\config.xml "*/5_*_*_*_*" #Run clone project with config.xml and start every 5 minutes
 	```
 	
-## Help
+## Cron Help
+    * * * * * Running command
+    - - - - -
+    | | | | |
+    | | | | ----- Day of the week (0 - 7) (Sunday =0 или =7)
+    | | | ------- Month (1 - 12)
+    | | --------- Day (1 - 31)
+    | ----------- Hour (0 - 23)
+    ------------- Minute (0 - 59)
+
 	The formats currently supported are
 	- `*/5` (for "every X" function),
 	- `4-10` (for time ranges),
@@ -24,7 +37,7 @@ Upon completion of the work, the script sends the report to the Slack chat.
 Config documentation
 <?xml version="1.0"?>
 
- Config decription
+Config description
 <repository> - The tag stores all the information about the repository that will be cloning by the script 
 <config_name> - The name of the repository
 <cloning_directory> - Directory where the project will be downloaded (temporarily) 
