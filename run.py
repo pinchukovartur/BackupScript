@@ -59,7 +59,7 @@ while True:
             add_info_in_log("SEND Slack message - start clone")
 
             if config_slack != "":
-                send_message_in_slack(slack_channel, "bot has be started", "backup repository - " + name_config,
+                send_message_in_slack(slack_url, slack_channel, "bot has be started", "backup repository - " + name_config,
                                       slack_username, icon_name, SLACK_BLUE)
 
             print("CREATE temporary name - " + name_config + "-" + str(os.getpid()))
@@ -103,7 +103,7 @@ while True:
                     add_info_in_log(str(e))
 
                     if config_slack != "":
-                        send_message_in_slack(slack_channel, "ERROR!!!", str(e), slack_username, icon_name, SLACK_RED)
+                        send_message_in_slack(slack_url, slack_channel, "ERROR!!!", str(e), slack_username, icon_name, SLACK_RED)
                     sys.exit(1)
                 finally:
                     # if lock file exist delete him
@@ -121,7 +121,7 @@ while True:
                     os.remove("log_" + str(os.getpid()) + ".txt")
 
                 if config_slack != "":
-                    send_message_in_slack(slack_channel, "good clone!!!", "good", slack_username, icon_name,
+                    send_message_in_slack(slack_url, slack_channel, "good clone!!!", "good", slack_username, icon_name,
                                           SLACK_GREEN)
             else:
                 print("The process already in use")
