@@ -1,5 +1,6 @@
 <data>
     <slack>
+		<url>https://hooks.slack.com/services/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</url>
 		<channel>#general</channel>
 		<username>Backup Bot</username>
 		<icon_name>:smile:</icon_name>

@@ -67,7 +67,7 @@ def check_max_size_and_max_number(path, size_project, storage_size, max_file_num
 
     if int(size_project) > int(storage_size):
         raise NameError("ERROR!!! size project more storage size : size project -" + size_project + " size storage - " \
-                        + storage_size)
+                        + str(storage_size))
     if storage_size != 0 and max_file_number != 0:
         # check max files number
         file_number = int(__get_number_file_in_direct(path))

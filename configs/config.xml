@@ -20,7 +20,7 @@
     <repository>
 		<config_name>BackupSystem</config_name>
 		<url>https://github.com/pinchukovartur/BackupSystem</url>
-		<cloud_directory>D:\Projects\Python\BackupBot\test_cloud</cloud_directory>
-		<cloning_directory>D:\Projects\Python\BackupBot\test_cloned_directory</cloning_directory>
+		<cloud_directory>D:\Projects\Python\BackupSystem\test</cloud_directory>
+		<cloning_directory>D:\Projects\Python\BackupSystem\test</cloning_directory>
     </repository>
 </data>

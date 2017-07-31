@@ -14,6 +14,11 @@ cron_cmd = parameters_console["cron_cmd"]
 config_name = parameters_console["config_name"]
 config_slack = parameters_console["config_slack"]
 
+# if config file null, return user help
+if config_name == "":
+    print(open("README.md").read())
+    exit(1)
+
 print("start script every " + cron_cmd)
 add_info_in_log("start script every " + cron_cmd)
 
@@ -21,16 +26,25 @@ while True:
     # start cron script
     if pycron.is_now(cron_cmd.replace("_", " ")):
 
-        print("GET List repository of config file")
-        add_info_in_log("GET List repository of config file")
-
-        list_repositories = get_all_repository(config_name)
-
         print("CHECK Console param")
         add_info_in_log("CHECK Console param")
 
         check_file(config_name, create_exception=True)
-        check_file(config_slack, create_exception=True)
+        if config_slack != "":
+            check_file(config_slack, create_exception=True)
+            print("GET Slack config")
+            add_info_in_log("GET Slack config")
+
+            slack_config = get_slack_config(config_slack)
+            slack_url = slack_config["url"]
+            slack_channel = slack_config["channel"]
+            slack_username = slack_config["username"]
+            icon_name = slack_config["icon_name"]
+
+        print("GET List repository of config file")
+        add_info_in_log("GET List repository of config file")
+
+        list_repositories = get_all_repository(config_name)
 
         for set_repository in list_repositories:
 
@@ -46,19 +60,12 @@ while True:
             check_folder(cloning_directory, create_exception=True)
             check_folder(cloud_directory, create_exception=True)
 
-            print("GET Slack config")
-            add_info_in_log("GET Slack config")
-
-            slack_config = get_slack_config(config_slack)
-            slack_channel = slack_config["channel"]
-            slack_username = slack_config["username"]
-            icon_name = slack_config["icon_name"]
-
             print("SEND Slack message - start clone")
             add_info_in_log("SEND Slack message - start clone")
 
-            send_message_in_slack(slack_channel, "bot has be started", "backup repository - " + name_config,
-                                  slack_username, icon_name, SLACK_BLUE)
+            if config_slack != "":
+                send_message_in_slack(slack_channel, "bot has be started", "backup repository - " + name_config,
+                                      slack_username, icon_name, SLACK_BLUE)
 
             print("CREATE temporary name - " + name_config + "-" + str(os.getpid()))
             add_info_in_log("CREATE temporary name - " + name_config + "-" + str(os.getpid()))
@@ -79,7 +86,8 @@ while True:
 
                     print("ARCHIVE repository")
                     add_info_in_log("ARCHIVE repository")
-
+                    print(cloud_directory)
+                    print(temporary_name)
                     archive_name = archiving_folder(cloning_directory, temporary_name)
 
                     print("CHECK SIZE AND NUMBER FILES")
@@ -93,13 +101,14 @@ while True:
                                                   max_size["max_file_number"])
                     print("MOVE archive")
                     add_info_in_log("MOVE archive")
-
-                    shutil.copy(cloning_directory + "\\" + archive_name, cloud_directory)
+                    if cloning_directory + "\\" + archive_name != cloud_directory + "\\" + archive_name:
+                        shutil.copy(cloning_directory + "\\" + archive_name, cloud_directory)
                 except Exception as e:
                     print(e)
                     add_info_in_log(str(e))
 
-                    send_message_in_slack(slack_channel, "ERROR!!!", str(e), slack_username, icon_name, SLACK_RED)
+                    if config_slack != "":
+                        send_message_in_slack(slack_channel, "ERROR!!!", str(e), slack_username, icon_name, SLACK_RED)
                     sys.exit(1)
                 finally:
                     # if lock file exist delete him
@@ -108,14 +117,17 @@ while True:
                     # if cloned project folder exist delete her
                     if check_folder(cloning_directory + "\\" + temporary_name):
                         delete_folder(cloning_directory + "\\" + temporary_name)
-                    if check_file(cloning_directory + "\\" + archive_name):
-                        os.remove(cloning_directory + "\\" + archive_name)
+                    if cloning_directory + "\\" + archive_name != cloud_directory + "\\" + archive_name:
+                        if check_file(cloning_directory + "\\" + archive_name):
+                            os.remove(cloning_directory + "\\" + archive_name)
 
                 # If the script has successfully worked, then delete the log file
                 if check_file("log_" + str(os.getpid()) + ".txt"):
                     os.remove("log_" + str(os.getpid()) + ".txt")
 
-                send_message_in_slack(slack_channel, "good clone!!!", "good", slack_username, icon_name, SLACK_GREEN)
+                if config_slack != "":
+                    send_message_in_slack(slack_channel, "good clone!!!", "good", slack_username, icon_name,
+                                          SLACK_GREEN)
             else:
                 print("The process already in use")
 

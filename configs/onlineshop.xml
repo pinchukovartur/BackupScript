@@ -6,23 +6,21 @@
 <!-- <cloning_directory> - Directory where the project will be downloaded (temporarily) -->
 <!-- <cloud_directory> - Directory where the project will be saved -->
 <!-- <max_file_number> - Maximum number of files in the directory -->
-<!-- <storage_size> - The maximum size of all files in the directory -->
-<!-- <size_expansion> - Type max size:
+<!-- <storage_size> - The maximum size of all files in the directory
 			mb - megabyte  
-			gb - gigabyte 
-			tb - terabyte 
-	(example: max_files_size = 3 & size_expansion = 1 => 3 megabyte max size)-->
+			gb - gigabySte 
+			tb - terabyte -->
 <!-- <url> - The address in the network where the repository is located 
 							(example: username:password@github.com/username/repository.git )-->
 
 <data>
 	<max_file_number>25</max_file_number>
-	<storage_size>100mb</storage_size>
+	<storage_size>100gb</storage_size>
 
     <repository>
 		<config_name>OnlineShop</config_name>
 		<url>https://github.com/pinchukovartur/OnlineShopBuildingMaterials</url>
-		<cloud_directory>test_cloud\</cloud_directory>
-		<cloning_directory>test_cloned_directory\</cloning_directory>
+		<cloud_directory>D:\Projects\Python\BackupSystem\test</cloud_directory>
+		<cloning_directory>D:\Projects\Python\BackupSystem\test</cloning_directory>
     </repository>
 </data>

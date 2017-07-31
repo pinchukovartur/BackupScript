@@ -9,8 +9,7 @@ SLACK_GREEN = "#00FF00"
 # message - message that is sent
 # chanel - chanel to which the message will be sent
 # username - the name of the message
-def send_message_in_slack(channel, header, message, username, icon_name, color):
-    url = "https://hooks.slack.com/services/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"
+def send_message_in_slack(url, channel, header, message, username, icon_name, color):
     payload = '{"channel": "' + channel + '", "username": "' + username + \
               '", "text": "' + header + \
               '", "icon_emoji": "' + icon_name + \
