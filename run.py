@@ -20,20 +20,17 @@ if config_name == "":
     exit(1)
 
 print("start script every " + cron_cmd)
-add_info_in_log("start script every " + cron_cmd)
 
 while True:
     # start cron script
     if pycron.is_now(cron_cmd.replace("_", " ")):
 
         print("CHECK Console param")
-        add_info_in_log("CHECK Console param")
 
         check_file(config_name, create_exception=True)
         if config_slack != "":
             check_file(config_slack, create_exception=True)
             print("GET Slack config")
-            add_info_in_log("GET Slack config")
 
             slack_config = get_slack_config(config_slack)
             slack_url = slack_config["url"]
@@ -42,8 +39,6 @@ while True:
             icon_name = slack_config["icon_name"]
 
         print("GET List repository of config file")
-        add_info_in_log("GET List repository of config file")
-
         list_repositories = get_all_repository(config_name)
 
         for set_repository in list_repositories:
@@ -88,7 +83,7 @@ while True:
                     add_info_in_log("ARCHIVE repository")
                     print(cloud_directory)
                     print(temporary_name)
-                    archive_name = archiving_folder(cloning_directory, temporary_name)
+                    archive_name = archiving_folder(cloning_directory, name_config, temporary_name)
 
                     print("CHECK SIZE AND NUMBER FILES")
                     add_info_in_log("CHECK SIZE AND NUMBER FILES")
