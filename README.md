@@ -34,22 +34,21 @@ Upon completion of the work, the script sends the report to the Slack chat.
 	- and of course a single number.
 	
 	
-Config documentation
-<?xml version="1.0"?>
-
-Config description
-<repository> - The tag stores all the information about the repository that will be cloning by the script 
-<config_name> - The name of the repository
-<cloning_directory> - Directory where the project will be downloaded (temporarily) 
-<cloud_directory> - Directory where the project will be saved 
-<max_file_number> - Maximum number of files in the directory 
-<storage_size> - The maximum size of all files in the directory
+## Config Help
+```
+<!-- Config decription -->
+<!-- <repository> - The tag stores all the information about the repository that will be cloning by the script -->
+<!-- <config_name> - The name of the repository -->
+<!-- <cloning_directory> - Directory where the project will be downloaded (temporarily) -->
+<!-- <cloud_directory> - Directory where the project will be saved -->
+<!-- <max_file_number> - Maximum number of files in the directory -->
+<!-- <storage_size> - The maximum size of all files in the directory
 			mb - megabyte  
-			gb - gigabyte 
-			tb - terabyte 
-<url> - The address in the network where the repository is located 
-							(example: username:password@github.com/username/repository.git )
-
+			gb - gigabySte 
+			tb - terabyte -->
+<!-- <url> - The address in the network where the repository is located 
+							(example: username:password@github.com/username/repository.git )-->
+```
 ```
 <data>
 	<max_file_number>25</max_file_number>

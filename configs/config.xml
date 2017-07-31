@@ -9,8 +9,7 @@
 <!-- <storage_size> - The maximum size of all files in the directory
 			mb - megabyte  
 			gb - gigabySte 
-			tb - terabyte 
-	(example: max_files_size = 3 & size_expansion = 1 => 3 megabyte max size)-->
+			tb - terabyte -->
 <!-- <url> - The address in the network where the repository is located 
 							(example: username:password@github.com/username/repository.git )-->
 
