@@ -17,7 +17,7 @@ Upon completion of the work, the script sends the report to the Slack chat.
 	```
 
 # Algorithm
-	[![Algorithm](https://github.com/pinchukovartur/BackupSystem/blob/master/bin/BackupSystem.png)](https://pinchukovartur.github.io/.)
+	[![Algorithm](https://pp.userapi.com/c841637/v841637180/a42a/dLeO3KRGjoc.jpg)](https://pinchukovartur.github.io/.)
 	
 ## Cron Help
     * * * * * Running command
