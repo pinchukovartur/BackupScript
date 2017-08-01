@@ -16,7 +16,7 @@ A script that clones a repository from a git in a slanted folder creates a proje
 python run.py <config_name.xml> -c <cron_command> -s <slack_config.data>
 
 Example
-python RunScripts.py config.xml -c "*/5 * * * *"  #Run clone project with config.xml and start every 5 minutes
+python run.py config.xml -c "*/5 * * * *"  #Run clone project with config.xml and start every 5 minutes
 ```
 
 # Features
