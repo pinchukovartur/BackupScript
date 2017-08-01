@@ -59,7 +59,12 @@ while True:
             add_info_in_log("SEND Slack message - start clone")
 
             if config_slack != "":
-                send_message_in_slack(slack_url, slack_channel, "bot has be started", "backup repository - " + name_config,
+                slack_header = "Start cloning of the project - " + name_config
+                slack_message = "Time to start the script - " + \
+                                str(datetime.datetime.now().strftime(" %d-%m-%Y %H_%M_%S"))
+                print(slack_header)
+                print(slack_message)
+                send_message_in_slack(slack_url, slack_channel, slack_header, slack_message,
                                       slack_username, icon_name, SLACK_BLUE)
 
             print("CREATE temporary name - " + name_config + "-" + str(os.getpid()))
@@ -103,7 +108,8 @@ while True:
                     add_info_in_log(str(e))
 
                     if config_slack != "":
-                        send_message_in_slack(slack_url, slack_channel, "ERROR!!!", str(e), slack_username, icon_name, SLACK_RED)
+                        slack_header = "An ERROR occurred while running the script"
+                        send_message_in_slack(slack_url, slack_channel, slack_header, str(e), slack_username, icon_name, SLACK_RED)
                     sys.exit(1)
                 finally:
                     # if lock file exist delete him
@@ -121,8 +127,11 @@ while True:
                     os.remove("log_" + str(os.getpid()) + ".txt")
 
                 if config_slack != "":
-                    send_message_in_slack(slack_url, slack_channel, "good clone!!!", "good", slack_username, icon_name,
-                                          SLACK_GREEN)
+                    slack_header = "The project " + name_config + " was successfully cloned"
+                    slack_message = "Time to end the script - " + str(
+                        datetime.datetime.now().strftime(" %d-%m-%Y %H_%M_%S"))
+                    send_message_in_slack(slack_url, slack_channel, slack_header,
+                                          slack_message, slack_username, icon_name, SLACK_GREEN)
             else:
                 print("The process already in use")
 
