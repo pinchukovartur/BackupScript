@@ -1,2 +1,0 @@
-GET Param from config file
-SEND Slack message - start clone
