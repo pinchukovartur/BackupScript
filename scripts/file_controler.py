@@ -70,7 +70,7 @@ def check_max_size_and_max_number(path, size_project, storage_size, max_file_num
                         + str(storage_size))
     if storage_size != 0 and max_file_number != 0:
         # check max files number
-        file_number = int(__get_number_file_in_direct(path))
+        file_number = int(get_number_file_in_direct(path))
 
         print("-- file number = " + str(file_number))
         add_info_in_log("-- file number = " + str(file_number))
@@ -98,7 +98,7 @@ def check_max_size_and_max_number(path, size_project, storage_size, max_file_num
 
 # The method return number of file in directory with .backup.zip expansion
 # - path where files are counter
-def __get_number_file_in_direct(path):
+def get_number_file_in_direct(path):
     # find folder in directory
     if os.path.exists(path):
         # get file with .backup.zip expansion

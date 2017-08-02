@@ -86,8 +86,6 @@ while True:
 
                     print("ARCHIVE repository")
                     add_info_in_log("ARCHIVE repository")
-                    print(cloud_directory)
-                    print(temporary_name)
                     archive_name = archiving_folder(cloning_directory, name_config, temporary_name)
 
                     print("CHECK SIZE AND NUMBER FILES")
