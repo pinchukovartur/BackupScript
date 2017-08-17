@@ -4,11 +4,10 @@ A script that clones a repository from a git in a slanted folder creates a proje
 ## Installation
 ```
 1. Install python version no less than 3.6
-2. Run install bat file to install all the necessary libraries
-3. Create a slack token to send a message http://php.net/manual/en/class.mongocollection.php
-4. Add a token to the slack_config.xml configuration
-5. Create a repository configuration.xml in the configs folder
-6. Run the script with the required parameters
+2. Create a slack token to send a message http://php.net/manual/en/class.mongocollection.php
+3. Add a token to the slack_config.xml configuration
+4. Create a repository configuration.xml in the configs folder
+5. Run the script with the required parameters
 ```
 
 ## Usage
