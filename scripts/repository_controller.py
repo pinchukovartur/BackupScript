@@ -1,10 +1,9 @@
-import subprocess
-import os
 import datetime
-import zipfile
-import time
+import os
+import subprocess
 import sys
-from tqdm import *  # download lib
+import zipfile
+
 
 # The method that downloads projects with github
 # repository_url - network address of the repository
@@ -18,7 +17,6 @@ def download_repository(repository_url, file_path):
         raise NameError("ERROR!! git error code - " + str(p.returncode))
     else:
         print("Successful download repository - " + str(p.returncode))
-
 
 
 # The method archives the specified folder

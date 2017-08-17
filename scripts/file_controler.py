@@ -1,6 +1,6 @@
 import os
-import sys
 import stat
+import sys
 
 
 # checks for a folder
@@ -59,22 +59,16 @@ def get_size_file_in_direct(path):
 # storage_size - size cloud
 # max_file_number - max number file in directory
 def check_max_size_and_max_number(path, size_project, storage_size, max_file_number):
-
-    print("-- size project = " + str(float(size_project) / 10 ** 6))
-    print("-- size storage = " + str(float(storage_size) / 10 ** 6))
-    add_info_in_log("-- size project = " + str(float(size_project) / 10 ** 6))
-    add_info_in_log("-- size project = " + str(float(size_project) / 10 ** 6))
-
+    print("-- size project = " + str(float(size_project) / 10 ** 6) + "mb")
+    print("-- size storage = " + str(float(storage_size) / 10 ** 6) + "mb")
+    print("1")
     if int(size_project) > int(storage_size):
-        raise NameError("ERROR!!! size project more storage size : size project -" + size_project + " size storage - " \
-                        + str(storage_size))
+        raise NameError("ERROR!!! size project more storage size : size project -" + str(size_project) +
+                        " size storage - " + str(storage_size))
     if storage_size != 0 and max_file_number != 0:
         # check max files number
         file_number = int(get_number_file_in_direct(path))
-
         print("-- file number = " + str(file_number))
-        add_info_in_log("-- file number = " + str(file_number))
-
         if int(file_number) >= int(max_file_number):
             # delete last file
             __delete_file_with_last_time(path)
@@ -84,8 +78,7 @@ def check_max_size_and_max_number(path, size_project, storage_size, max_file_num
             # check max files size
             size_file = int(get_size_file_in_direct(path))
 
-            print("-- file size = " + str(float(size_file) / 10 ** 6))
-            add_info_in_log("-- file size = " + str(float(size_file) / 10 ** 6))
+            print("-- file size in storage = " + str(float(size_file) / 10 ** 6) + "mb")
 
             if size_file >= int(storage_size):
                 # delete last file
@@ -126,10 +119,3 @@ def __delete_file_with_last_time(path):
             file_name = file
     # delete last file
     os.remove(path + "\\" + file_name)
-
-
-# Add info in log file
-def add_info_in_log(info):
-    f = open("log_" + str(os.getpid()) + ".txt", "a")
-    f.write(info + "\n")
-    f.close()

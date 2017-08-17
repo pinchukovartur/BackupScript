@@ -44,7 +44,6 @@ while True:
         for set_repository in list_repositories:
 
             print("GET Param from config file")
-            add_info_in_log("GET Param from config file")
 
             name_config = set_repository["config_name"]
             url_repository = set_repository['url']
@@ -56,7 +55,6 @@ while True:
             check_folder(cloud_directory, create_exception=True)
 
             print("SEND Slack message - start clone")
-            add_info_in_log("SEND Slack message - start clone")
 
             if config_slack != "":
                 slack_header = "Start cloning of the project - " + name_config
@@ -68,28 +66,23 @@ while True:
                                       slack_username, icon_name, SLACK_BLUE)
 
             print("CREATE temporary name - " + name_config + "-" + str(os.getpid()))
-            add_info_in_log("CREATE temporary name - " + name_config + "-" + str(os.getpid()))
 
             temporary_name = name_config + "-" + str(os.getpid())
 
             if check_list_pids(url_repository):
 
                 print("CREATE pid file")
-                add_info_in_log("CREATE pid file")
 
                 create_pid_file(url_repository)
                 try:
                     print("DOWNLOAD repository")
-                    add_info_in_log("DOWNLOAD repository")
 
                     download_repository(url_repository, cloning_directory + "\\" + temporary_name)
 
                     print("ARCHIVE repository")
-                    add_info_in_log("ARCHIVE repository")
                     archive_name = archiving_folder(cloning_directory, name_config, temporary_name)
 
                     print("CHECK SIZE AND NUMBER FILES")
-                    add_info_in_log("CHECK SIZE AND NUMBER FILES")
 
                     project_size = os.path.getsize(cloning_directory + "\\" + archive_name)
 
@@ -98,12 +91,10 @@ while True:
                     check_max_size_and_max_number(cloud_directory, project_size, max_size["storage_size"],
                                                   max_size["max_file_number"])
                     print("MOVE archive")
-                    add_info_in_log("MOVE archive")
                     if cloning_directory + "\\" + archive_name != cloud_directory + "\\" + archive_name:
                         shutil.copy(cloning_directory + "\\" + archive_name, cloud_directory)
                 except Exception as e:
                     print(e)
-                    add_info_in_log(str(e))
 
                     if config_slack != "":
                         slack_header = "An ERROR occurred while running the script"

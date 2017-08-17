@@ -15,12 +15,103 @@
 
 <data>
 	<max_file_number>25</max_file_number>
-	<storage_size>123mb</storage_size>
+	<storage_size>123gb</storage_size>
 
     <repository>
-		<config_name>BackupSystem</config_name>
-		<url>https://github.com/pinchukovartur/BackupSystem</url>
-		<cloud_directory>D:\Projects\Python\BackupSystem\test</cloud_directory>
-		<cloning_directory>D:\Projects\Python\BackupSystem\test</cloning_directory>
+		<config_name>BackupScipt</config_name>
+		<url>https://github.com/pinchukovartur/BackupScript.git</url>
+		<cloud_directory>G:\PYTHON\BackupScript\TEST_CLOUD</cloud_directory>
+		<cloning_directory>G:\PYTHON\BackupScript\TMP_FOLDER</cloning_directory>
+    </repository>
+	
+	<repository>
+		<config_name>YandexAnalytics</config_name>
+		<url>https://github.com/pinchukovartur/YandexAnalytics.git</url>
+		<cloud_directory>G:\PYTHON\BackupScript\TEST_CLOUD</cloud_directory>
+		<cloning_directory>G:\PYTHON\BackupScript\TMP_FOLDER</cloning_directory>
+    </repository>
+	
+	<repository>
+		<config_name>CheckOfKnowledge</config_name>
+		<url>https://github.com/pinchukovartur/CheckOfKnowledge.git</url>
+		<cloud_directory>G:\PYTHON\BackupScript\TEST_CLOUD</cloud_directory>
+		<cloning_directory>G:\PYTHON\BackupScript\TMP_FOLDER</cloning_directory>
+    </repository>
+	
+	<repository>
+		<config_name>ScreenshotScript</config_name>
+		<url>https://github.com/pinchukovartur/ScreenshotScript.git</url>
+		<cloud_directory>G:\PYTHON\BackupScript\TEST_CLOUD</cloud_directory>
+		<cloning_directory>G:\PYTHON\BackupScript\TMP_FOLDER</cloning_directory>
+    </repository>
+	
+	<repository>
+		<config_name>SimpleWindowsService</config_name>
+		<url>https://github.com/pinchukovartur/SimpleWindowsService.git</url>
+		<cloud_directory>G:\PYTHON\BackupScript\TEST_CLOUD</cloud_directory>
+		<cloning_directory>G:\PYTHON\BackupScript\TMP_FOLDER</cloning_directory>
+    </repository>
+	
+	<repository>
+		<config_name>OnlineShopBuildingMaterials</config_name>
+		<url>https://github.com/pinchukovartur/OnlineShopBuildingMaterials.git</url>
+		<cloud_directory>G:\PYTHON\BackupScript\TEST_CLOUD</cloud_directory>
+		<cloning_directory>G:\PYTHON\BackupScript\TMP_FOLDER</cloning_directory>
+    </repository>
+	
+	<repository>
+		<config_name>FasadUniStroy</config_name>
+		<url>https://github.com/pinchukovartur/FasadUniStroy.git</url>
+		<cloud_directory>G:\PYTHON\BackupScript\TEST_CLOUD</cloud_directory>
+		<cloning_directory>G:\PYTHON\BackupScript\TMP_FOLDER</cloning_directory>
+    </repository>
+	
+	<repository>
+		<config_name>SpaceShooter</config_name>
+		<url>https://github.com/pinchukovartur/SpaceShooter.git</url>
+		<cloud_directory>G:\PYTHON\BackupScript\TEST_CLOUD</cloud_directory>
+		<cloning_directory>G:\PYTHON\BackupScript\TMP_FOLDER</cloning_directory>
+    </repository>
+	
+	<repository>
+		<config_name>Roll-a-Ball</config_name>
+		<url>https://github.com/pinchukovartur/Roll-a-Ball.git</url>
+		<cloud_directory>G:\PYTHON\BackupScript\TEST_CLOUD</cloud_directory>
+		<cloning_directory>G:\PYTHON\BackupScript\TMP_FOLDER</cloning_directory>
+    </repository>
+	
+	<repository>
+		<config_name>MTEKInternetBalanceSystem</config_name>
+		<url>https://github.com/pinchukovartur/MTEKInternetBalanceSystem.git</url>
+		<cloud_directory>G:\PYTHON\BackupScript\TEST_CLOUD</cloud_directory>
+		<cloning_directory>G:\PYTHON\BackupScript\TMP_FOLDER</cloning_directory>
+    </repository>
+	
+	<repository>
+		<config_name>REST-Thrift-SOAP-Client</config_name>
+		<url>https://github.com/pinchukovartur/REST-Thrift-SOAP-Client.git</url>
+		<cloud_directory>G:\PYTHON\BackupScript\TEST_CLOUD</cloud_directory>
+		<cloning_directory>G:\PYTHON\BackupScript\TMP_FOLDER</cloning_directory>
+    </repository>
+	
+	<repository>
+		<config_name>SOAP-WebService</config_name>
+		<url>https://github.com/pinchukovartur/SOAP-WebService.git</url>
+		<cloud_directory>G:\PYTHON\BackupScript\TEST_CLOUD</cloud_directory>
+		<cloning_directory>G:\PYTHON\BackupScript\TMP_FOLDER</cloning_directory>
+    </repository>
+	
+	<repository>
+		<config_name>Thrift-RPC-Service</config_name>
+		<url>https://github.com/pinchukovartur/Thrift-RPC-Service.git</url>
+		<cloud_directory>G:\PYTHON\BackupScript\TEST_CLOUD</cloud_directory>
+		<cloning_directory>G:\PYTHON\BackupScript\TMP_FOLDER</cloning_directory>
+    </repository>
+	
+	<repository>
+		<config_name>REST-Service</config_name>
+		<url>https://github.com/pinchukovartur/REST-Service.git</url>
+		<cloud_directory>G:\PYTHON\BackupScript\TEST_CLOUD</cloud_directory>
+		<cloning_directory>G:\PYTHON\BackupScript\TMP_FOLDER</cloning_directory>
     </repository>
 </data>

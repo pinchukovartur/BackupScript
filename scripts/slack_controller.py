@@ -22,5 +22,3 @@ def send_message_in_slack(url, channel, header, message, username, icon_name, co
     if response.status_code != 200:
         raise NameError("ERROR!! send message slack, err code - " + str(response.status_code))
 
-# Example
-# send_message_in_slack("#general", "header_text", "main_text", "user_name", ":smile:", SLACK_GREEN)
