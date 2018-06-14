@@ -4,7 +4,7 @@ A script that clones a repository from a git in a slanted folder creates a proje
 ## Installation
 ```
 1. Install python version no less than 3.6
-2. Create a slack token to send a message http://php.net/manual/en/class.mongocollection.php
+2. Create a slack token to send a message https://trilobitesoft.slack.com/apps/A0F7XDUAZ-incoming-webhooks?page=1
 3. Add a token to the slack_config.xml configuration
 4. Create a repository configuration.xml in the configs folder
 5. Run the script with the required parameters
